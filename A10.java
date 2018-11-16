@@ -35,18 +35,12 @@ class A10 {
       BufferedReader br = new BufferedReader(new FileReader(file));
       String st;
       st = br.readLine();
-      System.out.println(st);
       String[] splited = st.split("\\s+");
-      for(int i =0; i < splited.length -1; i++){
-        System.out.println(splited[i]);
-      }
       minTurns = Integer.parseInt(splited[0]);
       turnPenalty = Integer.parseInt(splited[1]);
       size = (Integer.parseInt(splited[2])+1) * (Integer.parseInt(splited[2])+1);
       graph = new int[size][3];
-      for(int i =0; i < splited.length -1; i++){
-        System.out.println(splited[i]);
-      }
+      br.close();
     } catch(IOException ex){
       System.out.println("Error in load problem method. Shutting down....");
     }
