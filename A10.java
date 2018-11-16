@@ -20,6 +20,8 @@ class A10 {
   static int turnPenalty; // penalty for each extra turn over the minimum
 
   /* define your static variables below (NO instance variables allowed) */
+  static int[][] graph;
+
 
 
   /* load problem definition from the given file into applicable static
@@ -28,8 +30,26 @@ class A10 {
    * exceptions and output meaningful error messages.
    */
   static void loadProblem(String fileName) {
-
-    /* To be completed */
+    try{
+      File file = new File(fileName);
+      BufferedReader br = new BufferedReader(new FileReader(file));
+      String st;
+      st = br.readLine();
+      System.out.println(st);
+      String[] splited = st.split("\\s+");
+      for(int i =0; i < splited.length -1; i++){
+        System.out.println(splited[i]);
+      }
+      minTurns = Integer.parseInt(splited[0]);
+      turnPenalty = Integer.parseInt(splited[1]);
+      size = (Integer.parseInt(splited[2])+1) * (Integer.parseInt(splited[2])+1);
+      graph = new int[size][3];
+      for(int i =0; i < splited.length -1; i++){
+        System.out.println(splited[i]);
+      }
+    } catch(IOException ex){
+      System.out.println("Error in load problem method. Shutting down....");
+    }
 
   }// loadProblem method
 

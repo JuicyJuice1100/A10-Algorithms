@@ -1,0 +1,290 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsmath,amssymb,latexsym,enumitem,xcolor,array}
+\usepackage{algorithmicx,algorithm,algpseudocode,graphicx}
+
+\setlength{\oddsidemargin}{-0.5in}
+\setlength{\evensidemargin}{-0.5in}
+\setlength{\textwidth}{7.5in}
+\setlength{\topmargin}{0in}
+\setlength{\textheight}{8.5in}
+
+\newcommand{\answer}[1]{\underline{\hspace*{#1mm}}}
+\newcommand{\up}[1]{\vspace*{-#1mm}}
+\renewcommand{\arraystretch}{1}
+\newcommand{\qed}{\hfill$\square$}
+\newcommand{\assignNum}{10}
+\newcommand{\numPoints}{40 (+ 5 bonus)}
+\newcommand{\dueDate}{Monday 11/19/2018}
+\setlength{\parindent}{0mm}
+\newcommand{\header}{
+\noindent{\textit{CS 321 - Algorithms - Fall 2018\hfill \yourName}}
+\begin{center}
+  \textbf{\Large Assignment \assignNum}\\\colorbox{red}{\Large\bf
+     \textcolor{white}{Due BEFORE 8:00AM on  \dueDate}}\\\bigskip
+  On time /  20\% off / no credit\\\bigskip
+  \textbf{Total points: \numPoints}
+  \bigskip
+
+  \hrule\medskip You are allowed to work in teams of two or three on
+  this assignment. Make sure to include all names above but submit
+  only ONE zip  file to D2L.
+  \medskip \hrule \end{center}
+
+\medskip This assignment will help you develop your algorithm design
+and analysis skills with a focus on dynamic-programming and greedy
+algorithms.  As always, you must write up your solutions to this
+assignment IN THIS FILE using \LaTeX\ by filling in (or replacing) all
+of the boxes below.
+% If your submitted \texttt{.tex}
+% file does not compile, then you will receive 0 points.\medskip
+You should NOT add any \LaTeX\ packages to this \texttt{.tex}
+file. You will submit your code for Problem 2 in the file {\tt A10.java}.
+\medskip
+
+\medskip
+\textbf{Submission procedure:}
+\begin{enumerate}[itemsep=-2mm]
+
+\item Complete this file, called \texttt{a\assignNum .tex}, with your
+  full name(s) and answers typed up below.
+
+\item Create a directory called \texttt{a\assignNum} and copy exactly three
+files into this directory, namely:\up{4}
+
+  \begin{itemize}[itemsep=-1mm]
+  \item \texttt{a\assignNum .tex} (this file with all of your answers added)
+  \item \texttt{a\assignNum .pdf} (the compiled version of the file above)
+  \item \texttt{A10.java} (the file containing your answer to Problem 2)
+  \end{itemize}
+
+\item Zip up this directory to yield a file called \texttt{a\assignNum .zip}
+
+\item Submit this zip file to the D2L dropbox for A\assignNum\  before the
+deadline above.
+
+\item Submit a STAPLED, SINGLE-SIDED, hard copy of your \texttt{a\assignNum
+.pdf} file BEFORE the beginning of class on the due date above.
+\end{enumerate}
+}% end of header command
+
+%************************************
+% No need to modify anything above this line
+% but DO fill this in!
+
+\newcommand{\yourName}{\fbox{Your names go here}}
+
+%************************************g
+
+
+\begin{document}
+\header
+
+\textbf{Problem statements}
+\begin{enumerate}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \item                            % Part 1
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+     {\bf \color{red} (10 points) Consider the algorithm on Slide
+       27-8. We proved that this greedy algorithm always returns an
+       optimal solution to the activity-selection problem. For each
+       one of the two parts below, state whether or not this algorithm
+       always returns an optimal solution after line 2 has been
+       replaced with a new type of greedy choice.
+
+       For each part, you must justify your answer convincingly and AS
+       CONCISELY AS POSSIBLE. Make sure that all answers are explicit with
+       no work to be done by the grader except reading your justification.
+
+       a. Proposed replacement for Line 2:
+
+       {\tt Sort $A$ in order of
+       non-decreasing duration $f_i - s_i$ to yield a sequence $A'$}\bigskip
+
+       Optimal? \fbox{\color{black}{True /  False  (delete the wrong answer)}}\bigskip
+
+       Justification:\medskip
+
+      \fbox{\color{black}{Your justification goes here}}\bigskip
+
+      b. Replace Line 2 with:
+
+
+      $A' \leftarrow A$
+
+      and replace Line 5 with:
+
+      {\tt $a_k \leftarrow$ the activity in $A'$ that overlaps the smallest number of activities in $A'$ }\bigskip
+
+       Optimal? \fbox{\color{black}{True /  False  (delete the wrong answer)}}\bigskip
+
+       Justification:\medskip
+
+      \fbox{\color{black}{Your justification goes here}}\bigskip
+
+
+     }
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \item                            % Part 2
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+     {\bf \color{red} (30 + 5 points) You have been contacted by the
+    International Ski Federation to help a future World Cup hosting
+    country design their Super Giant Slalom course. This is an
+
+    \begin{minipage}{0.55\linewidth}
+     alpine skiing event in which both speed and the number of turns
+     matter. The selected site is a mountain side with a 450-meter
+     vertical drop and many possible gate locations represented by
+     vertices in the graph on the right, in which vertex 1 rand 9 represent the
+     top and bottom of the course, respectively. The number on each
+     edge encodes the overall quality of each gate-to-gate segment in
+     terms of vertical drop and other speed-enhancing factors, like
+     the flatness of the ground, the wind protection provided by nearby
+     trees, etc.\\
+
+     While there is a minimum number of turns (and therefore of gates) that must
+     be included in a super-G course, this number cannot be too high in
+     order to increase the maximum speed that
+     \end{minipage}\hfill
+     \begin{minipage}{0.4\linewidth}
+     \centerline{\includegraphics[width=\linewidth]{./graph.eps}} \end{minipage}
+
+    skiers will reach. Your task is to find a maximum-quality path from the top to the
+    bottom vertex. You will use a dynamic-programming approach to
+    solve this problem. Of course, as an experienced computer
+    scientist, you will test your algorithm and its implementation on
+    many mountain sides whose characteristics are encoded in an input
+    file with the following structure:
+
+    \begin{itemize}
+    \item The first number in the file is the minimum number of turns
+      that the final course must have. Note that the top and bottom
+      vertices can never count as a turn.
+    \item The second number in the file is the penalty that the
+      selected course will incur for each extra turn over the minimum
+      number of required turns. This is a positive number that must be
+      subtracted from the total path  quality for each extra turn.
+    \item The third number in the file is the size of the mountain
+      side defined as the exact number of course segments from the top
+      of the mountain to the leftmost (or rightmost) gate
+      position. This value is equal to 2 in the example depicted
+      above, since that is the length of the direct path between
+      vertices 1 and 3 (or between vertices 1 and 7).
+    \item The rest of the numbers in the file are the numbers encoding
+      the quality of each gate-to-gate segment. These numbers are
+      always listed in the same order. Picture the mountain side
+      rotated by 45 degrees counter-clockwise around vertex 1. Then
+      all of the horizontal edges appear first, listed from left to
+      right and then top to bottom, followed by the vertical edges,
+      also listed from left to right and then top to bottom.
+    \end{itemize}
+
+    With these formatting constraints, here are the contents of the
+    input file corresponding to the mountain side depicted above,
+    assuming that at least two turns are required and that each extra
+    turn incurs a 3-point penalty:
+
+\begin{verbatim}
+2 3 2 10 15 10 8 4 8 5 17 8 3 10 7
+\end{verbatim}
+
+Note that consecutive numbers are separated by one space character and
+that the file always contains a single line of text whose length is
+fully determined by the third number.
+
+There are three versions of this problem for you to choose from:
+\begin{enumerate}
+\item \underline{Basic version:} You must find the  quality of a maximum-quality
+  path while NOT enforcing the minimum required number of turns. In this
+  version of the problem, each and every turn incurs the penalty
+  specified by the second number in the file. You will ignore the
+  first number. \underline{If you choose this version, your maximum possible
+    score}
+  \underline{on this problem will be 30 out of 30.}
+\item \underline{Simplified version:} You must find the quality of a
+  maximum-quality path without taking turns into account at all. You
+  will ignore the first two numbers in the file. \underline{If you
+    choose this version, your maximum possible score on this problem will
+    be 25}
+    \underline{out of 30.}
+\item \underline{Bonus version:} You must find the quality of a maximum-quality
+  path while enforcing both the minimum required number of turns and
+  applying the turn penalty for each extra turn over the minimum. You
+  will use all numbers in the input file. \underline{If you
+    choose this version, your maximum possible score on this problem will
+    be 35}
+  \underline{out of 30.}
+\end{enumerate}
+
+For full credit, your solution must:
+\begin{itemize}
+\item Output a single path, followed by a single whitespace character, a single
+  number (i.e., the total quality of an optimal path), and a newline
+  character (so that each test output appears on its own line). The
+  required format for the path, i.e., a  sequence of UPPERCASE letters
+  (either `L' or `R'), is illustrated below.
+\item Output the correct answer in the correct format for each and
+  every test that I will run.
+\item Run as fast as possible.
+\item Must contain efficient code that uses built-in libraries to
+  the full extent, and minimizes wasted time and space consumption.
+\end{itemize}
+
+I will run my tests in the following order:
+\begin{enumerate}
+\item test suite for the simplified version
+\item test suite  for the basic version
+\item test suite  for the bonus version
+\end{enumerate}
+
+I will stop my testing at the end of the first test suite in which
+your submission fails at least one test. This will determine your
+maximum possible score for this problem.  Your actual score will be
+determined based on how close you were to passing all tests.
+
+For reference, here is the expected output for inputs that use the
+graph depicted above with different values of the first two parameters:
+
+\begin{enumerate}
+\item Simplified version:
+  \begin{itemize}
+  \item Input: \verb+0 0 2 10 15 10 8 4 8 5 17 8 3 10 7+
+  \item Output: \verb+RLLR 45+
+  \end{itemize}
+\item Basic version:
+  \begin{itemize}
+  \item Input1: \verb+0 3 2 10 15 10 8 4 8 5 17 8 3 10 7+
+  \item Output1: \verb+RLLR 39+
+  \item Input2: \verb+0 6 2 10 15 10 8 4 8 5 17 8 3 10 7+
+  \item Output2: \verb+RRLL 34+
+  \end{itemize}
+\item Bonus version:
+  \begin{itemize}
+  \item Input1: \verb+3 0 2 10 15 10 8 4 8 5 17 8 3 10 7+
+  \item Output1: \verb+RLRL 42+
+  \item Input2: \verb+3 1000 2 10 15 10 8 4 8 5 17 8 3 10 7+
+  \item Output2: \verb+RLRL 42+
+  \item Input3: \verb+2 0 2 10 15 10 8 4 8 5 17 8 3 10 7+
+  \item Output3: \verb+RLLR 45+
+  \item Input4: \verb+2 6 2 10 15 10 8 4 8 5 17 8 3 10 7+
+  \item Output4: \verb+RLLR 45+
+  \item Input5: \verb+1 6 2 10 15 10 8 4 8 5 17 8 3 10 7+
+  \item Output5: \verb+RRLL 40+
+  \item Input6: \verb+0 1 2 10 15 10 8 4 8 5 17 8 3 10 7+
+  \item Output6: \verb+RLLR 43+
+  \end{itemize}
+\end{enumerate}
+
+Your answer to this problem will be fully contained in your submitted
+{\tt A10.java} file. For full credit, you must follow the directions given
+therein.
+}
+\end{enumerate}
+
+
+\end{document}
