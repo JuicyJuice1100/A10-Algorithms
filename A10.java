@@ -68,7 +68,7 @@ class A10 {
    * This method does not send anything to the console.
    */
   static void solveProblem() {
-
+    
   }// solveProblem method
 
   /* return the value of an optimal solution obtained with the solveProblem
