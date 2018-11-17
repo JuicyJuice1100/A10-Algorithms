@@ -2,10 +2,11 @@
 *
 *  @version CS 321 - Fall 2018 - A10
 *
-*  @author 1st Justin Espiritu
+*  @author 1st STUDENT'S FULL NAME GOES HERE
 *
-*  @author 2nd Robert Freiberg
+*  @author 2nd STUDENT'S FULL NAME GOES HERE (DELETE THIS LINE IF NOT NEEDED)
 *
+*  @author 3rd STUDENT'S FULL NAME GOES HERE (DELETE THIS LINE IF NOT NEEDED)
 *
 */
 
@@ -13,17 +14,15 @@ import java.util.*;
 import java.io.*;
 import java.lang.reflect.Array;
 
-class A10 {
+class A10redux {
 
   static int size;        // number of edges on one side of the square
   static int minTurns;    // minimum required number of turns in the solution
   static int turnPenalty; // penalty for each extra turn over the minimum
 
   /* define your static variables below (NO instance variables allowed) */
-  static Map<Integer, Node> pathTable;
-  static Map<Integer, Turn> costTable;
+  static Map<Integer, Node> nodeTable;
   static int sizeOfMap;
-  static int currentMax;
 
 
 
@@ -42,14 +41,11 @@ class A10 {
       size = Integer.parseInt(data.pop());
       sizeOfMap = ((int)Math.pow(size + 1, 2));
 
-      pathTable = new HashMap<Integer, Node>();
+      nodeTable = new HashMap<Integer, Node>();
 
-      createRight(data); //gets all the rightTurn values
-      createLeft(data); //gets all the leftTurn values
 
-      costTable = new HashMap<Integer, Turn>();
-
-      initializeCostTable();
+      createRight(data, 0, new ArrayList<Integer>(), 1, "");
+      createLeft(data, size + 2);
 
       br.close();
     } catch(IOException ex){
@@ -69,7 +65,8 @@ class A10 {
     for(int i = 1; i <= sizeOfMap; i++){
       Turn data = new Turn();
       data = solveHelper(0, i, 1, "");
-      data.points -= getNumberOfTurns(data.turns) * turnPenalty;
+      // data.points = data.points - getNumberOfTurns(data.turns)*turnPenalty;
+      // currentMax = Math.max(data.points, currentMax);
       costTable.replace(i, data);
     }
   }// solveProblem method
@@ -82,7 +79,6 @@ class A10 {
    */
   static int getOptimalValue() {
 
-    return costTable.get(sizeOfMap).points;
   }// getOptimalValue method
 
   /* return an optimal solution (e.g., "LRRLLLRR") obtained with the
@@ -93,68 +89,12 @@ class A10 {
    */
   static String getOptimalSolution() {
 
-    return costTable.get(sizeOfMap).turns;
   }// getOptimalValue method
 
 
   /* Implement any helper method(s) that you need (if any) below
    * All methods in this class MUST be static.
    */
-
-  //inserts all the values for left turns into leftArray
-  static void createLeft(LinkedList<String> data){
-    for(int i = 1; i < sizeOfMap; i++){
-      if(i > sizeOfMap - size - 1){
-        pathTable.get(i).leftNode = -1;
-        pathTable.get(i).leftPoints = Integer.MIN_VALUE;
-      } else {
-        pathTable.get(i).leftNode = i + size + 1;
-        pathTable.get(i).leftPoints = Integer.parseInt(data.pop());
-      }
-    }
-  }
-
-  //insert all the values for right turns into rightArray
-  static void createRight(LinkedList<String> data){
-    for(int i = 1; i < sizeOfMap; i++){
-      Node node = new Node();
-      if(i % (size + 1) == 0){
-        node.rightPoints = Integer.MIN_VALUE;
-        node.rightNode = -1;
-        pathTable.put(i, node);
-      } else {
-        node.rightPoints = Integer.parseInt(data.pop());
-        node.rightNode = i + 1;
-        pathTable.put(i, node);
-      }
-    }
-  }
-
-  static void initializeCostTable(){
-    for(int i = 1; i <= sizeOfMap; i++){
-      costTable.put(i, null);
-    }
-  }
-
-  static Turn solveHelper(int points, int goal, int currentNode, String turns){
-    if(currentNode == goal || currentNode == -1 || currentNode > goal){
-      Turn data = new Turn();
-      data.points = points;
-      data.turns = turns;
-      return data;
-    } else {
-
-      Turn left = solveHelper(points + pathTable.get(currentNode).leftPoints, goal, pathTable.get(currentNode).leftNode, turns + "L");
-      Turn right = solveHelper(points + pathTable.get(currentNode).rightPoints, goal, pathTable.get(currentNode).rightNode, turns + "R");
-      
-      
-      if(left.compareTo(right) == 1){
-        return left;
-      } else {
-        return right;
-      }
-    }
-  }
 
   static int getNumberOfTurns(String str){
     int count = 0;
@@ -166,18 +106,66 @@ class A10 {
     return count;
   }
 
-  static class Node {
-    int leftPoints, rightPoints, leftNode, rightNode;
-  };
+  //insert all the values for left turns
+  static void createLeft(LinkedList<String> data, int currentNode){ // currentNode starts at size + 2
+    if(currentNode > sizeOfMap){
+      return;
+    }
 
-  static class Turn implements Comparable{
+    int points = Integer.parseInt(data.pop());
+    if(nodeTable.get(currentNode).parentNodes.contains(currentNode - 1)){
+      int leftParent, rightParent;
+      leftParent = nodeTable.get(currentNode - 1).points + nodeTable.get(currentNode).points;
+      rightParent = nodeTable.get(currentNode - size - 1).points + points;
+      nodeTable.get(currentNode).points = Math.max(leftParent, rightParent);
+      if(Integer.compare(leftParent, rightParent) == 1){
+        nodeTable.get(currentNode).turns = "R" + nodeTable.get(currentNode).turns;
+      } else {
+        nodeTable.get(currentNode).turns = "L" + nodeTable.get(currentNode).turns;
+      }
+    } else {
+      nodeTable.get(currentNode).parentNodes.add(currentNode - size - 1);
+      nodeTable.get(currentNode).points += points;
+      nodeTable.get(currentNode).turns = "L" + nodeTable.get(currentNode).turns;
+    }
+
+    createLeft(data, currentNode + 1);
+  }
+
+  //insert all the values for right turns
+  static void createRight(LinkedList<String> data, int points, List<Integer> parentNodes, int currentNode, String turns){
+    if(currentNode == sizeOfMap){
+      Node node = new Node();
+      node.points = points;
+      node.parentNodes = parentNodes;
+      node.turns = turns;
+      nodeTable.put(currentNode, node);
+      return;
+    }
+    if((currentNode - 1) % (size + 1) == 0){
+      parentNodes.clear();
+      points = 0;
+      turns = "";
+    }
+    Node node = new Node();
+    node.points = points;
+    node.parentNodes = parentNodes;
+    node.turns = turns;
+
+    nodeTable.put(currentNode, node);
+
+    points += Integer.parseInt(data.pop());
+    parentNodes.add(currentNode);
+    turns = turns.concat("R");
+
+    createRight(data, points, parentNodes, currentNode + 1, turns);
+  }
+
+  public static class Node {
     int points;
     String turns;
-
-    public int compareTo(Turn o) {
-      return Integer.compare(this.points, o.points);
-    }
-  }
+    List<Integer> parentNodes; 
+  };
 
   /* Do not modify this method in your submission
    */
