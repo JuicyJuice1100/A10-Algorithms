@@ -87,9 +87,7 @@ class A10 {
    */
   static int getOptimalValue() {
 
-    /* To be completed */
-
-    return -1;
+    return costTable.get(sizeOfMap).points;
   }// getOptimalValue method
 
   /* return an optimal solution (e.g., "LRRLLLRR") obtained with the
@@ -100,9 +98,7 @@ class A10 {
    */
   static String getOptimalSolution() {
 
-    /* To be completed */
-
-    return "";
+    return costTable.get(sizeOfMap).turns;
   }// getOptimalValue method
 
 
@@ -161,14 +157,6 @@ class A10 {
     }
   }
 
-  // static int moveRight(int index){
-  //   return index++;
-  // }
-
-  // static int moveLeft(int index){
-  //   return index + size + 1;
-  // }
-
   static Turn solveHelper(int points, int goal, int currentNode, String turns){
     if(currentNode == goal || currentNode == -1 || currentNode > goal){
       Turn data = new Turn();
@@ -192,6 +180,24 @@ class A10 {
     }
   }
 
+  // static boolean checkPath(int current, int goal){
+  //   if(current == sizeOfMap || current == -1){
+  //     return false;
+  //   } if (current == goal){
+
+  //   } 
+  //   else {
+  //     return checkPath(pathTable.get(current).leftNode, goal) || checkPath(pathTable.get(current).rightNode, goal)
+  //   }
+  //   // if(count > size || current == -1 || current > goal){
+  //   //   return true;
+  //   // } if(current == goal){
+  //   //   return false;
+  //   // } else {
+  //   //   return checkPath(pathTable.get(current).leftNode, goal, count+1) || checkPath(pathTable.get(current).rightNode, goal, count+1);
+  //   // }
+  // }
+
   static int getNumberOfTurns(String str){
     int count = 0;
     for(int i = 0; i < str.length() - 1; i++){
@@ -201,9 +207,6 @@ class A10 {
     }
     return count;
   }
-  // static String optimalHelper(int point){
-
-  // }
 
   static class Node {
     int leftPoints, rightPoints, leftNode, rightNode;
