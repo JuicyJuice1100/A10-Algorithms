@@ -23,8 +23,9 @@ class A10 {
   /* define your static variables below (NO instance variables allowed) */
   // static int[][] table;
   static Map<Integer, Node> pathTable;
-  static Map<Integer, String> costTable;
+  static Map<Integer, Turn> costTable;
   static int sizeOfMap;
+  static int currentMax;
   // static int index;
 
 
@@ -50,7 +51,7 @@ class A10 {
       createRight(data); //gets all the rightTurn values
       createLeft(data); //gets all the leftTurn values
 
-      costTable = new HashMap<Integer, String>();
+      costTable = new HashMap<Integer, Turn>();
 
       initializeCostTable();
 
@@ -68,7 +69,13 @@ class A10 {
    * This method does not send anything to the console.
    */
   static void solveProblem() {
-    
+    currentMax = Integer.MIN_VALUE;
+    for(int i = 1; i <= sizeOfMap; i++){
+      Turn data = new Turn();
+      data = solveHelper(0, i, 1, "");
+      currentMax = Math.max(data.points, currentMax);
+      costTable.replace(i, data);
+    }
   }// solveProblem method
 
   /* return the value of an optimal solution obtained with the solveProblem
@@ -153,17 +160,49 @@ class A10 {
     }
   }
 
-  static int moveRight(int index){
-    return index++;
+  // static int moveRight(int index){
+  //   return index++;
+  // }
+
+  // static int moveLeft(int index){
+  //   return index + size + 1;
+  // }
+
+  static Turn solveHelper(int points, int goal, int currentNode, String turns){
+    if(currentNode == goal || currentNode == -1 || currentNode > goal){
+      Turn data = new Turn();
+      data.points = points;
+      data.turns = turns;
+      return data;
+    } else {
+      // return Math.max(solveHelper(points + pathTable.get(currentNode).leftPoints, goal, pathTable.get(currentNode).leftNode), 
+      //     solveHelper(points + pathTable.get(currentNode).rightPoints, goal, pathTable.get(currentNode).rightNode));
+      Turn left = solveHelper(points + pathTable.get(currentNode).leftPoints, goal, pathTable.get(currentNode).leftNode, turns + "L");
+      Turn right = solveHelper(points + pathTable.get(currentNode).rightPoints, goal, pathTable.get(currentNode).rightNode, turns + "R");
+      if(left.compareTo(right) == 1){
+        return left;
+      } else {
+        return right;
+      }
+    }
   }
 
-  static int moveLeft(int index){
-    return index + size + 1;
-  }
+  // static String optimalHelper(int point){
+
+  // }
 
   static class Node {
     int leftPoints, rightPoints, leftNode, rightNode;
   };
+
+  static class Turn implements Comparable{
+    int points;
+    String turns;
+
+    public int compareTo(Turn o) {
+      return Integer.compare(this.points, o.points);
+    }
+  }
 
   /* Do not modify this method in your submission
    */
