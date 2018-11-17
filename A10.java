@@ -21,9 +21,11 @@ class A10 {
   static int turnPenalty; // penalty for each extra turn over the minimum
 
   /* define your static variables below (NO instance variables allowed) */
-  static int[][] table;
-  static Map<Integer, Node> pathValues = new HashMap<Integer, Node>();
-  static int index;
+  // static int[][] table;
+  static Map<Integer, Node> pathTable;
+  static Map<Integer, String> costTable;
+  static int sizeOfMap;
+  // static int index;
 
 
 
@@ -40,13 +42,17 @@ class A10 {
       minTurns = Integer.parseInt(data.pop());
       turnPenalty = Integer.parseInt(data.pop());
       size = Integer.parseInt(data.pop());
+      sizeOfMap = ((int)Math.pow(size + 1, 2));
 
-      table = new int[(int)(Math.pow(size + 1, 2)-1)][2];
+      // table = new int[(int)(Math.pow(size + 1, 2)-1)][2];
+      pathTable = new HashMap<Integer, Node>();
 
       createRight(data); //gets all the rightTurn values
       createLeft(data); //gets all the leftTurn values
 
-      initializeMap();
+      costTable = new HashMap<Integer, String>();
+
+      initializeCostTable();
 
       br.close();
     } catch(IOException ex){
@@ -62,12 +68,7 @@ class A10 {
    * This method does not send anything to the console.
    */
   static void solveProblem() {
-    for (Map.Entry<K,V> entry : map.entrySet()) {
-      K key = entry.getKey();
-      V value = entry.getValue();
-      
-      
-    }
+
   }// solveProblem method
 
   /* return the value of an optimal solution obtained with the solveProblem
@@ -109,11 +110,15 @@ class A10 {
     // while(!data.isEmpty(){
     //   leftArray.add(Integer.parseInt(data.pop()));
     // }
-    for(int i = 0; i < table.length; i++){
-      if(i >= table.length - size){
-        table[i][0] = Integer.MIN_VALUE;
+    for(int i = 1; i < sizeOfMap; i++){
+      if(i > sizeOfMap - size - 1){
+        // table[i][0] = Integer.MIN_VALUE;
+        pathTable.get(i).leftNode = -1;
+        pathTable.get(i).leftPoints = Integer.MIN_VALUE;
       } else {
-        table[i][0] = Integer.parseInt(data.pop());
+        // table[i][0] = Integer.parseInt(data.pop());
+        pathTable.get(i).leftNode = i + size + 1;
+        pathTable.get(i).leftPoints = Integer.parseInt(data.pop());
       }
     }
   }
@@ -126,24 +131,26 @@ class A10 {
     //   rightArray.add(Integer.parseInt(data.pop()));
     // }
 
-    for(int i = 0; i < table.length; i++){
-      if((i + 1) % (size + 1) == 0){
-        table[i][1] = Integer.MIN_VALUE;
+    for(int i = 1; i < sizeOfMap; i++){
+      Node node = new Node();
+      if(i % (size + 1) == 0){
+        // table[i][1] = Integer.MIN_VALUE;
+        node.rightPoints = Integer.MIN_VALUE;
+        node.rightNode = -1;
+        pathTable.put(i, node);
       } else {
-        table[i][1] = Integer.parseInt(data.pop());
+        // table[i][1] = Integer.parseInt(data.pop());
+        node.rightPoints = Integer.parseInt(data.pop());
+        node.rightNode = i + 1;
+        pathTable.put(i, node);
       }
     }
   }
 
-  static void initializeMap(){
-    for(int i = 2; i <= table.length + 1; i++){
-      Node node = new Node();
-      pathValues.put(i, node);
+  static void initializeCostTable(){
+    for(int i = 1; i <= sizeOfMap; i++){
+      costTable.put(i, null);
     }
-    // Node node = new Node();
-    // node.points = 0;
-    // node.path = null;
-    // pathValues.put(1, node);
   }
 
   static int moveRight(int index){
@@ -155,8 +162,7 @@ class A10 {
   }
 
   static class Node {
-    int points;
-    String path;
+    int leftPoints, rightPoints, leftNode, rightNode;
   };
 
   /* Do not modify this method in your submission
