@@ -69,11 +69,12 @@ class A10 {
    * This method does not send anything to the console.
    */
   static void solveProblem() {
-    currentMax = Integer.MIN_VALUE;
+    // currentMax = Integer.MIN_VALUE;
     for(int i = 1; i <= sizeOfMap; i++){
       Turn data = new Turn();
       data = solveHelper(0, i, 1, "");
-      currentMax = Math.max(data.points, currentMax);
+      // data.points = data.points - getNumberOfTurns(data.turns)*turnPenalty;
+      // currentMax = Math.max(data.points, currentMax);
       costTable.replace(i, data);
     }
   }// solveProblem method
@@ -179,6 +180,10 @@ class A10 {
       //     solveHelper(points + pathTable.get(currentNode).rightPoints, goal, pathTable.get(currentNode).rightNode));
       Turn left = solveHelper(points + pathTable.get(currentNode).leftPoints, goal, pathTable.get(currentNode).leftNode, turns + "L");
       Turn right = solveHelper(points + pathTable.get(currentNode).rightPoints, goal, pathTable.get(currentNode).rightNode, turns + "R");
+      
+      // left.points -= getNumberOfTurns(left.turns) * turnPenalty;
+      // right.points -= getNumberOfTurns(right.turns) * turnPenalty;
+      
       if(left.compareTo(right) == 1){
         return left;
       } else {
@@ -187,6 +192,15 @@ class A10 {
     }
   }
 
+  static int getNumberOfTurns(String str){
+    int count = 0;
+    for(int i = 0; i < str.length() - 1; i++){
+      if(str.charAt(i) != str.charAt(i+1)){
+        count++;
+      }
+    }
+    return count;
+  }
   // static String optimalHelper(int point){
 
   // }
